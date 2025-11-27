@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Virtual - 36 Teclas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="email" placeholder="Email" id="loginEmail" required>
+                <input type="password" placeholder="Senha" id="loginPassword" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <p id="loginError" style="color: #e74c3c; margin-top: 10px; display: none;">Email ou senha incorretos!</p>
+        </div>
+    </div>
+
+    <div class="user-info" id="userInfo" style="display: none;">
+        <span id="userEmailDisplay"></span>
+        <button id="logoutBtn">Sair</button>
+    </div>
+
+    <div class="note-display">
+        <span id="current-note">C4</span>
+        <span id="current-frequency">261.63 Hz</span>
+    </div>
+
+    <div class="music-selector">
+        <label for="musicSelect">Música:</label>
+        <select id="musicSelect">
+            <option value="">Selecione uma música...</option>
+        </select>
+        <button id="clearSequence">Limpar</button>
+    </div>
+
+    <div class="sequence-reader" id="sequenceReader">
+        <div class="sequence-track" id="sequenceTrack"></div>
+        <div class="sequence-pointer" id="sequencePointer">
+            <span id="speedValueDisplay">1.0x</span>
+            <div class="speed-slider-container">
+                <div class="speed-slider-track">
+                    <div class="speed-slider-thumb" id="speedSliderThumb"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-container">
+        <button id="recordButton">Record Gravar</button>
+        <button id="downloadButton" disabled>Download Baixar</button>
+        <button id="playButton" disabled>Play Tocar</button>
+        <button id="playMusicButton">Music Tocar Música</button>
+    </div>
+
+    <div class="piano-container">
+        <div class="piano" id="piano"></div>
+    </div>
+
+    <div class="menu-button" id="menuButton">
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">×</button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><button data-modal="modal1">Teclas</button></li>
+            <li><button data-modal="modal2">Qualidade de Som</button></li>
+            <li><button data-modal="modal3">Configurações</button></li>
+            <li><button data-modal="modalSobreSite">Sobre o Site</button></li>
+            <li><button data-modal="modalSobreDev">Sobre os Devs</button></li>
+            <li><button data-modal="modal5">Ajuda</button></li>
+        </ul>
+        <div class="sidebar-social">
+            <p><strong>Contato:</strong></p>
+            <p><i class="fas fa-envelope"></i> contato@pianovirtual.com</p>
+            <p><i class="fas fa-phone"></i> (11) 99999-9999</p>
+            <div class="social-links">
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="modal" id="modal1">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Teclas do Teclado</h2>
+            <div style="text-align:left; line-height:2;">
+                <strong>Brancas:</strong> a s d f g h j → C4-B4 | z x c v b n m → C3-B3 | q w e r t y u → C5-B5<br><br>
+                <strong>Pretas:</strong> Shift + tecla (ex: ! = C#4)
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Qualidade de Som</h2>
+            <p>Som real de piano acústico profissional<br>Boost automático nas graves (+50%)<br>Fade-out suave de 1.5s</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal3">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Configurações</h2>
+
+            <div class="config-section">
+                <h3>Cores do Piano</h3>
+                <label>Teclas Brancas: <input type="color" id="whiteColor" value="#ffffff"></label><br><br>
+                <label>Teclas Pretas: <input type="color" id="blackColor" value="#000000"></label>
+            </div>
+
+            <div class="config-section">
+                <h3>Efeitos</h3>
+                <label><input type="checkbox" id="rgbToggle"> Ativar Modo RGB</label>
+            </div>
+
+            <div class="config-section">
+                <h3>Editar Teclas (clique para mudar)</h3>
+                <div id="keyMapper" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px;"></div>
+            </div>
+
+            </div>
+    </div>
+
+    <div class="modal" id="modalSobreSite">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Sobre o Site</h2>
+            <p>Piano Virtual completo, offline, com gravação, músicas prontas, RGB, personalização e muito mais!</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modalSobreDev">
+    <div class="modal-content dev-modal">
+        <span class="close">×</span>
+        <h2>Sobre os Devs</h2>
+        <div class="dev-grid">
+            <div class="dev-card">
+                <img src="eduardo.jpg" alt="Eduardo"> 
+                <h3>Eduardo</h3> 
+                <p>Frontend & Design</p>
+                <p><i class="fab fa-github"></i> @seu_github</p>
+            </div>
+            <div class="dev-card">
+                <img src="ezequiel.jpg" alt="Ezequiel"> 
+                <h3>Ezequiel</h3> 
+                <p>Web Audio & JS</p>
+                <p><i class="fab fa-linkedin"></i> linkedin.com/in/ezequiel</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="modal" id="modal5">
+        <div class="modal-content chat-modal">
+            <span class="close">×</span>
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            <div class="chat-container">
+                <h1>Chat de Assistência</h1>
+                <div class="conversation-display" id="conversation-display"></div>
+                <div class="choices-area" id="choices-area"></div>
+                <button class="action-button" id="restart-button">Reiniciar Conversa</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
